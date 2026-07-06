@@ -4,7 +4,6 @@ from playwright.async_api import async_playwright
 
 from . import config
 from .logger import log
-from .screenshot import screenshot_erro
 
 _playwright = None
 _browser = None
@@ -40,11 +39,7 @@ async def login():
         await _page.fill("input[name='user[email]']", config.EMAIL)
         await _page.fill("input[name='user[password]']", config.SENHA)
         await _page.click("input[type='submit'], button:has-text('Entrar')")
-        try:
-            await _page.wait_for_url("**/manifests**", timeout=config.TIMEOUT_PADRAO)
-        except Exception as erro:
-            await screenshot_erro(_page, "login")
-            raise erro
+        await _page.wait_for_url("**/manifests**", timeout=config.TIMEOUT_PADRAO)
         log("login", "Login realizado.")
     else:
         log("login", "Sessao ativa.")

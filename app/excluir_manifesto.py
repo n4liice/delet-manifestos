@@ -5,7 +5,6 @@ from playwright.async_api import expect
 from . import config
 from .com_retry import com_retry
 from .logger import log
-from .screenshot import screenshot_erro
 
 
 # Etapa 1: navega ate Manifestos
@@ -89,7 +88,6 @@ async def confirmar_exclusao(page, motivo, confirmar):
 
     if not confirmar:
         log("confirmar_exclusao", "confirmar=False - parando antes do clique irreversivel.", "WARN")
-        await screenshot_erro(page, "parada_antes_da_confirmacao")
         return False
 
     # ACAO IRREVERSIVEL
@@ -149,7 +147,6 @@ async def executar_exclusao(page, numero_manifesto, motivo, confirmar):
             status = "PARADO_ANTES_DA_CONFIRMACAO"
     except Exception as erro:
         log("executar_exclusao", f"Processo interrompido: {erro}", "ERROR")
-        await screenshot_erro(page, "executar_exclusao")
         return {"status": "ERRO", "numeroManifesto": numero, "mensagem": str(erro)}
 
     log("executar_exclusao", f"Resultado final: {status}")

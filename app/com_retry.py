@@ -1,8 +1,5 @@
-import asyncio
-
 from . import config
 from .logger import log
-from .screenshot import screenshot_erro
 
 
 async def com_retry(nome_etapa, fn, page, max_tentativas=None):
@@ -16,9 +13,7 @@ async def com_retry(nome_etapa, fn, page, max_tentativas=None):
         except Exception as erro:
             ultimo_erro = erro
             log(nome_etapa, f"Falhou: {erro}", "WARN")
-            if tentativa == max_tentativas:
-                await screenshot_erro(page, nome_etapa)
-            else:
+            if tentativa < max_tentativas:
                 await page.wait_for_timeout(1000 * tentativa)
 
     raise RuntimeError(f"[{nome_etapa}] Falha apos {max_tentativas} tentativas: {ultimo_erro}")
