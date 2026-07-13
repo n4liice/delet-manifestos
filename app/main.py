@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -37,7 +39,7 @@ async def excluir_manifesto_endpoint(request: Request):
         codigo = 500 if resultado["status"] == "ERRO" else 200
         return JSONResponse(status_code=codigo, content=resultado)
     except Exception as erro:
-        log("server", f"Erro inesperado: {erro}", "ERROR")
+        log("server", f"Erro inesperado: {erro}\n{traceback.format_exc()}", "ERROR")
         return JSONResponse(status_code=500, content={"status": "ERRO", "mensagem": str(erro)})
 
 
