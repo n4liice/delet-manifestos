@@ -105,18 +105,18 @@ async def validar_exclusao_efetivada(page, numero, max_tentativas=6, intervalo_s
 
     excluido = False
     for tentativa in range(1, max_tentativas + 1):
-        await campo_numero.fill("")
-        await campo_numero.fill(numero)
-        await campo_numero.press("Enter")
         try:
+            await campo_numero.fill("")
+            await campo_numero.fill(numero)
+            await campo_numero.press("Enter")
             await expect(linhas).to_have_count(0, timeout=config.TIMEOUT_PADRAO)
             excluido = True
             break
-        except AssertionError:
+        except Exception as erro:
             log(
                 "validar_exclusao_efetivada",
-                f"Manifesto {numero} ainda aparece (tentativa {tentativa}/{max_tentativas}), "
-                f"aguardando ESL processar a exclusao...",
+                f"Manifesto {numero} ainda aparece ou pagina instavel (tentativa {tentativa}/{max_tentativas}): "
+                f"{erro}. Aguardando ESL processar a exclusao...",
             )
             await page.wait_for_timeout(intervalo_s * 1000)
 
